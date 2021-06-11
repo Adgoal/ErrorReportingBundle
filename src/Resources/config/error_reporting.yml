@@ -1,0 +1,25 @@
+services:
+
+  AdgoalCommon\ErrorReporting\Infrastructure\Repository\Processor\ErrorReportingProcessor:
+    calls:
+      - [setLogger, ['@logger']]
+    tags:
+      - { name: monolog.logger, channel: ErrorReporting }
+
+  AdgoalCommon\ErrorReporting\Application\Processor\ErrorEventProcessor:
+    arguments:
+      - '@AdgoalCommon\ErrorReporting\Infrastructure\Repository\Processor\ErrorReportingProcessor'
+    calls:
+      - [setLogger, ['@logger']]
+    tags:
+      - { name: monolog.logger, channel: ErrorReporting }
+
+
+  tactician.middleware.event.command.error:
+    class: AdgoalCommon\ErrorReporting\Infrastructure\Event\Publisher\CommandErrorPublisher
+    arguments:
+      - '@adgoal.error_reporting.client_producer'
+    calls:
+      - [setLogger, ['@logger']]
+    tags:
+      - { name: monolog.logger, channel: ErrorReporting }
