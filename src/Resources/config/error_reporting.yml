@@ -23,3 +23,9 @@ services:
       - [setLogger, ['@logger']]
     tags:
       - { name: monolog.logger, channel: ErrorReporting }
+
+  AdgoalCommon\ErrorReportingBundle\Command\DebugTestErrorReporting:
+    arguments:
+      - '@tactician.middleware.event.command.error'
+    tags:
+      - { name: 'console.command' }
